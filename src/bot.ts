@@ -1,9 +1,18 @@
+import Request from '../utils/request'
+
 class Bot {
-  private hookUrl: string
+  private request: Request
 
   constructor(hookUrl: string) {
-    this.hookUrl = hookUrl
+    this.request = new Request(hookUrl)
   }
 
-  sendMsg() {}
+  async sendText(text: string) {
+    return await this.request.post('', {
+      msg_type: 'text',
+      content: { text },
+    })
+  }
 }
+
+export default Bot
