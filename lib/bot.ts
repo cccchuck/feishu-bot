@@ -1,4 +1,4 @@
-import Request from '../utils/request'
+import Request from './request'
 import defaultTemplate from '../templates/NFT Listener'
 
 interface ITemplate {
