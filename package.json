@@ -2,18 +2,20 @@
   "name": "feishu-bot",
   "version": "1.0.2",
   "description": "",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/lib/index.js",
+  "types": "./dist/lib/index.d.ts",
   "scripts": {
-    "test": "tsc -p tsconfig.test.json && mocha ./test-dist/*",
-    "build": "tsc -p tsconfig.json"
+    "build": "tsc",
+    "release-patch": "npm version patch && npm public",
+    "release-minor": "npm version minor && npm public",
+    "release-major": "npm version major && npm public"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/cccchuck/feishu-bot.git"
   },
   "author": "Chuck",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/cccchuck/feishu-bot/issues"
   },
