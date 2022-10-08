@@ -16,6 +16,8 @@ import Bot from 'feishu-bot'
 const bot = new Bot('Your Feishu Webhook URL')
 
 bot.sendText()
-bot.sendPost()
-bot.sendCard()
+bot.sendRichText()
+
+// You can registe your custom template richtext by bot.registeTemplace()
+bot.registeTemplace()
 ```
