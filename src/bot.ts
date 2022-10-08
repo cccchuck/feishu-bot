@@ -1,115 +1,96 @@
 import Request from '../utils/request'
+import defaultTemplate from '../templates/NFT Listener'
 
-interface IPostTemplate {
-  title: string
-  text: string
-  aText: string
-  aHref: string
+interface ITemplate {
+  tags: string[]
+  template: string
 }
 
-interface ICardTemplace {
-  hash: string
-  from: string
-  to: string
-  tokenID: string
-}
-
-const POST_TEMPLATE = {
-  title: '',
-  content: [
-    [
-      {
-        tag: 'text',
-        text: '',
-      },
-      {
-        tag: 'a',
-        text: '',
-        href: '',
-      },
-    ],
-  ],
-}
-
-const CARD_TEMPLATE = {
-  config: {
-    wide_screen_mode: true,
-  },
-  elements: [
-    {
-      tag: 'div',
-      text: {
-        content:
-          '**Hash:**\n{Hash}\n**From:**\n{From}\n**To:**\n{To}\n**TokenID:**\n{TokenID}\n',
-        tag: 'lark_md',
-      },
-    },
-    {
-      tag: 'hr',
-    },
-    {
-      actions: [
-        {
-          tag: 'button',
-          text: {
-            content: '浏览器查看',
-            tag: 'plain_text',
-          },
-          type: 'primary',
-          url: '',
-        },
-      ],
-      tag: 'action',
-    },
-  ],
-  header: {
-    template: 'blue',
-    title: {
-      content: '⏰ 交易监控提醒',
-      tag: 'plain_text',
-    },
-  },
+interface ITemplates {
+  id: string
+  content: ITemplate
 }
 
 class Bot {
   private request: Request
+  private templates!: ITemplates[]
 
   constructor(hookUrl: string) {
     this.request = new Request(hookUrl)
+    this._initTemplates()
   }
 
-  private _genPostTemplate(args: IPostTemplate) {
-    const _post_template = { ...POST_TEMPLATE }
-    _post_template.title = args.title
-    _post_template.content[0][0].text = args.text
-    _post_template.content[0][1].text = args.aText
-    _post_template.content[0][1].href = args.aHref
-    return _post_template
+  private _initTemplates() {
+    this.registeTemplate('NFT', defaultTemplate)
   }
 
-  private _genCardTemplate(args: ICardTemplace) {
-    const _card_template = { ...CARD_TEMPLATE }
+  private _genTemplate(id: string, args: string[]) {
+    const template = this.templates.find((item) => item.id === id)
 
-    let url = `https://etherscan.io/tx/${args.hash}`
-    let content = _card_template.elements[0].text
-      ? _card_template.elements[0].text.content
-      : ''
-    content = content?.replace('{Hash}', args.hash)
-    content = content?.replace('{From}', args.from)
-    content = content?.replace('{To}', args.to)
-    content = content?.replace('{TokenID}', args.tokenID)
+    if (!template) throw new Error('Template not found')
 
-    _card_template.elements[0].text
-      ? (_card_template.elements[0].text.content = content)
-      : null
-    _card_template.elements[2].actions
-      ? (_card_template.elements[2].actions[0].url = url)
-      : null
+    const tags = template.content.tags
 
-    return _card_template
+    if (tags.length !== args.length)
+      throw new Error('Template arguments not match')
+
+    tags.forEach((tag, index) => {
+      if (typeof tag !== typeof args[index])
+        throw new Error('Template arguments not match')
+      template.content.template = template.content.template.replace(
+        tag,
+        args[index]
+      )
+    })
+
+    return JSON.parse(template.content.template)
   }
 
-  async sendText(text: string) {
+  private _genPrepareTemplace(id: string, template: unknown) {
+    const _templace = JSON.stringify(template)
+    const tags = _templace.match(/\{[A-Z].*?\}/g) || []
+
+    const prepareTemplate: ITemplates = {
+      id,
+      content: {
+        tags,
+        template: _templace,
+      },
+    }
+
+    return prepareTemplate
+  }
+
+  public registeTemplate(
+    id: string,
+    template: unknown,
+    forceReplace?: boolean
+  ) {
+    let idx: number
+
+    idx =
+      this.templates !== undefined
+        ? this.templates.findIndex((item) => item.id === id)
+        : -1
+
+    if (idx !== -1 && !forceReplace) {
+      throw new Error(`The template id of ${id} has already used`)
+    }
+
+    const prepareTemplate = this._genPrepareTemplace(id, template)
+
+    if (idx !== -1) {
+      this.templates[idx] = prepareTemplate
+    } else {
+      !this.templates
+        ? (this.templates = [prepareTemplate])
+        : this.templates.push(prepareTemplate)
+    }
+
+    return this.templates
+  }
+
+  public async sendText(text: string) {
     const resp = await this.request.post('', {
       msg_type: 'text',
       content: { text },
@@ -118,22 +99,9 @@ class Bot {
     return typeof resp === 'string' ? false : true
   }
 
-  async sendPost(args: IPostTemplate) {
-    const postTemplate = this._genPostTemplate(args)
-    const resp = await this.request.post('', {
-      msg_type: 'post',
-      content: { post: { zh_cn: postTemplate } },
-    })
-
-    return typeof resp === 'string' ? false : true
-  }
-
-  async sendCard(args: ICardTemplace) {
-    const cardTemplate = this._genCardTemplate(args)
-    const resp = await this.request.post('', {
-      msg_type: 'interactive',
-      card: cardTemplate,
-    })
+  public async sendRichText(id: string, args: string[]) {
+    const template = this._genTemplate(id, args)
+    const resp = await this.request.post('', template)
 
     return typeof resp === 'string' ? false : true
   }
