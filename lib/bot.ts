@@ -1,5 +1,5 @@
 import Request from './request'
-import defaultTemplate from '../templates/NFT Listener'
+import defaultTemplate from './NFT Listener'
 
 interface ITemplate {
   tags: string[]

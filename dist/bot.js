@@ -40,7 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var request_1 = __importDefault(require("./request"));
-var NFT_Listener_1 = __importDefault(require("../templates/NFT Listener"));
+var NFT_Listener_1 = __importDefault(require("./NFT Listener"));
 var Bot = /** @class */ (function () {
     function Bot(hookUrl) {
         this.request = new request_1.default(hookUrl);
