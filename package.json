@@ -1,6 +1,6 @@
 {
   "name": "feishu-bot",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "",
   "main": "./dist/lib/index.js",
   "types": "./dist/lib/index.d.ts",
