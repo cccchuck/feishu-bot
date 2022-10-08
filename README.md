@@ -19,5 +19,5 @@ bot.sendText()
 bot.sendRichText()
 
 // You can registe your custom template richtext by bot.registeTemplace()
-bot.registeTemplace()
+bot.registeTemplate()
 ```
