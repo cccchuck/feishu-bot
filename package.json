@@ -2,9 +2,11 @@
   "name": "feishu-bot",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "tsc -p tsconfig.test.json && mocha ./test-dist/*",
+    "build": "tsc -p tsconfig.json"
   },
   "repository": {
     "type": "git",
@@ -18,5 +20,8 @@
   "homepage": "https://github.com/cccchuck/feishu-bot#readme",
   "dependencies": {
     "axios": "^1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^3.9.10"
   }
 }
