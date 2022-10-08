@@ -2,8 +2,8 @@
   "name": "feishu-bot",
   "version": "1.0.10",
   "description": "",
-  "main": "./dist/lib/index.js",
-  "types": "./dist/lib/index.d.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "release-patch": "npm version patch && npm publish",
