@@ -4,10 +4,10 @@
     "module": "commonjs",
     "lib": ["ES2017", "ES7", "ES6"],
     "declaration": true,
-    "outDir": "dist",
+    "outDir": "./dist",
     "strict": true,
     "esModuleInterop": true
   },
-  "include": ["lib"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["./lib/**/*"],
+  "exclude": ["./node_modules/**/*", "./dist/**/*"]
 }
