@@ -6,9 +6,9 @@
   "types": "./dist/lib/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "release-patch": "npm version patch && npm public",
-    "release-minor": "npm version minor && npm public",
-    "release-major": "npm version major && npm public"
+    "release-patch": "npm version patch && npm publish",
+    "release-minor": "npm version minor && npm publish",
+    "release-major": "npm version major && npm publish"
   },
   "repository": {
     "type": "git",
