@@ -29,6 +29,7 @@ class Bot {
 
     if (!template) throw new Error('Template not found')
 
+    let _templace = template?.content.template
     const tags = template.content.tags
 
     if (tags.length !== args.length)
@@ -37,13 +38,10 @@ class Bot {
     tags.forEach((tag, index) => {
       if (typeof tag !== typeof args[index])
         throw new Error('Template arguments not match')
-      template.content.template = template.content.template.replace(
-        tag,
-        args[index]
-      )
+      _templace = _templace.replace(tag, args[index])
     })
 
-    return JSON.parse(template.content.template)
+    return JSON.parse(_templace)
   }
 
   private _genPrepareTemplace(id: string, template: unknown) {
