@@ -53,15 +53,16 @@ var Bot = /** @class */ (function () {
         var template = this.templates.find(function (item) { return item.id === id; });
         if (!template)
             throw new Error('Template not found');
+        var _templace = template === null || template === void 0 ? void 0 : template.content.template;
         var tags = template.content.tags;
         if (tags.length !== args.length)
             throw new Error('Template arguments not match');
         tags.forEach(function (tag, index) {
             if (typeof tag !== typeof args[index])
                 throw new Error('Template arguments not match');
-            template.content.template = template.content.template.replace(tag, args[index]);
+            _templace = _templace.replace(tag, args[index]);
         });
-        return JSON.parse(template.content.template);
+        return JSON.parse(_templace);
     };
     Bot.prototype._genPrepareTemplace = function (id, template) {
         var _templace = JSON.stringify(template);
